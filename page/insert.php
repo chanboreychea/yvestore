@@ -5,7 +5,6 @@ error_reporting(0);
 
 //edit
 
-
 //delete
 if (isset($_POST["remove"])) {
 	$product_id = $_POST['remove'];
@@ -72,23 +71,9 @@ if (isset($_POST['upload'])) {
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<script src="../js/script.js"></script>
-	<link rel="stylesheet" href="../css/insert.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+	<link rel="stylesheet" href="../css/style.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<style>
-		.btn-success.active {
-			display: none;
-		}
-
-		.btn-secondary {
-			display: none;
-		}
-
-		.btn-secondary.active {
-			display: block;
-		}
-	</style>
 
 </head>
 
@@ -103,7 +88,7 @@ if (isset($_POST['upload'])) {
 		<div class="cart"></div>
 	</div>
 
-	<div class="wrapperr">
+	<div class="wrapper-insert">
 		<div class="content-insert">
 			<form method="POST" action="" enctype="multipart/form-data">
 
@@ -144,8 +129,6 @@ if (isset($_POST['upload'])) {
 				<br>
 				<div class="form-group">
 					<button class="btn btn-success" type="submit" name="upload">SAVE</button>
-					<button class="btn btn-secondary" type="submit" name="update">UPDATE</button>
-					<!-- <div class="btn btn-secondary">Update</div> -->
 					<div id="aj"></div>
 				</div>
 
