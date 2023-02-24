@@ -1,9 +1,55 @@
 <?php
 include("db_connect.php");
 error_reporting(0);
-
+$edit_state = false;
 
 //edit
+if (isset($_POST['edit'])) {
+	$edit_state = true;
+	$product_id = $_POST['edit'];
+	try {
+		$queryedit = "SELECT product_id, product_name, qty, price, image_front, image_back,categorie_id from products where product_id = $product_id limit 1";
+		$result = $connection->query($queryedit);
+		$row = $result->fetch_assoc();
+		$product_name = $row['product_name'];
+		$qty = $row['qty'];
+		$price = $row['price'];
+		$image_front = $row['image_front'];
+		$image_back = $row['image_back'];
+		$categorie_id = $row['categorie_id'];
+
+		$query = "SELECT categorie_name from categories where categorie_id = $categorie_id limit 1";
+		$resultt = $connection->query($query);
+		$row = $resultt->fetch_assoc();
+		$categorie_name = $row['categorie_name'];
+	} catch (PDOException $e) {
+		echo $e->getMessage();
+	}
+}
+//update
+if (isset($_POST['update'])) {
+	$edit_state = false;
+
+	$product_id = $_POST['update'];
+
+	$product_name = $_POST['product_name'];
+	//mysqli_real_escape_string = use to escape single/double quote when user input
+	$product_name = mysqli_real_escape_string($connection, $product_name);
+	$qty = $_POST['qty'];
+	$price = $_POST['price'];
+	$categorie_id = $_POST['categorie'];
+
+	$sql = "UPDATE products SET product_name='$product_name', 
+                qty='$qty', price='$price' , categorie_id = '$categorie_id'
+                WHERE product_id=$product_id LIMIT 1";
+	mysqli_query($connection, $sql);
+	if (mysqli_errno($connection) > 0) {
+		die(mysqli_error($connection));
+	}
+	$product_name = "";
+	$qty = "";
+	$price = "";
+}
 
 //delete
 if (isset($_POST["remove"])) {
@@ -20,6 +66,7 @@ if (isset($_POST["remove"])) {
 		echo $e->getMessage();
 	}
 }
+
 // If upload button is clicked ...
 if (isset($_POST['upload'])) {
 
@@ -95,41 +142,51 @@ if (isset($_POST['upload'])) {
 				<?php
 				$sql = "SELECT categorie_id, categorie_name  FROM categories";
 				$result = $connection->query($sql);
-
+				
 				if ($result->num_rows > 0) {
 				?>
 					<label for="exampleFormControlSelect1">Products Categories</label>
-					<select class="form-control" id="exampleFormControlSelect1" name="categorie" value="">
+					<select class="form-control" id="exampleFormControlSelect1" name="categorie" >
+						<option value="<?php echo $categorie_id ?>"><?php echo $categorie_name ?></option>
 						<?php while ($row = $result->fetch_assoc()) { ?>
 							<option value="<?php echo $row['categorie_id'] ?>"> <?php echo $row['categorie_name'] ?></option>
-						<?php }
-						?>
+						<?php } ?>
+						
 					</select>
 				<?php
 				}
 				?>
 				<br>
 				<div class="form-group">
-					<input id="name" class="form-control" type="text" name="product_name" placeholder="Product Name" required />
-				</div>
-				<div class="form-group">
-					<input id="qty" class="form-control" type="number" name="qty" placeholder="Quantity" required />
-				</div>
-				<div class="form-group">
-					<input id="price" class="form-control" type="text" name="price" placeholder="Price" required />
-				</div>
-				<div class="form-group">
-					<label for="image_front">Image Front</label>
-					<input class="form-control" type="file" name="image_front" id="image_front" />
-				</div>
-				<div class="form-group">
-					<label for="image_back">Image Back</label>
-					<input class="form-control" type="file" name="image_back" id="image_back" />
+					<input class="form-control" type="text" name="product_name" value="<?php echo $product_name ?>" placeholder="Product Name" required />
 				</div>
 				<br>
 				<div class="form-group">
-					<button class="btn btn-success" type="submit" name="upload">SAVE</button>
-					<div id="aj"></div>
+					<input class="form-control" type="number" name="qty" value="<?php echo $qty ?>" placeholder="Quantity" required />
+				</div>
+				<br>
+				<div class="form-group">
+					<input class="form-control" type="text" name="price" value="<?php echo $price ?>" placeholder="Price" required />
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="image_front">Image Front</label>
+					<input class="form-control" type="file" name="image_front" id="image_front" />
+					<input type="hidden" name="image_front_name" value="<?php echo $image_front ?>">
+				</div>
+				<br>
+				<div class="form-group">
+					<label for="image_back">Image Back</label>
+					<input class="form-control" type="file" name="image_back" id="image_back" />
+					<input type="hidden" name="image_back_name" value="<?php echo $image_back ?>">
+				</div>
+				<br>
+				<div class="form-group">
+					<?php if ($edit_state == false) { ?>
+						<button class="btn btn-success" type="submit" name="upload">SAVE</button>
+					<?php } else { ?>
+						<button class="btn btn-success" type="submit" value="<?php echo $product_id ?>" name="update">UPDATE</button>
+					<?php } ?>
 				</div>
 
 			</form>
