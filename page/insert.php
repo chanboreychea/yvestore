@@ -39,8 +39,34 @@ if (isset($_POST['update'])) {
 	$price = $_POST['price'];
 	$categorie_id = $_POST['categorie'];
 
-	$sql = "UPDATE products SET product_name='$product_name', 
-                qty='$qty', price='$price' , categorie_id = '$categorie_id'
+	$img_front = $_POST['image_front_name'];
+	if ($_FILES["image_front"]["name"] == null) {
+		$i_front = $img_front;
+	} else {
+		$tempname = $_FILES["image_front"]["tmp_name"];
+		$extension = explode('.', $_FILES["image_front"]["name"]);
+		$extension = end($extension);
+		$image_front = "../image/" . time() . '_' . md5(rand()) . '.' . $extension;
+		move_uploaded_file($tempname, $image_front);
+		$i_front = $image_front;
+		unlink('../image/' . $img_front);
+	}
+
+	$img_back = $_POST['image_back_name'];
+	if ($_FILES["image_back"]["name"] == null) {
+		$i_back = $img_back;
+	} else {
+		$tempname = $_FILES["image_back"]["tmp_name"];
+		$extension = explode('.', $_FILES["image_back"]["name"]);
+		$extension = end($extension);
+		$image_back = "../image/" . time() . '_' . md5(rand()) . '.' . $extension;
+		move_uploaded_file($tempname, $image_back);
+		$i_back = $image_back;
+		unlink('../image/' . $img_back);
+	}
+
+	$sql = "UPDATE products SET product_name='$product_name', image_front = '$i_front',
+                image_back = '$i_back', qty = '$qty', price='$price', categorie_id = '$categorie_id'
                 WHERE product_id=$product_id LIMIT 1";
 	mysqli_query($connection, $sql);
 	if (mysqli_errno($connection) > 0) {
@@ -106,6 +132,9 @@ if (isset($_POST['upload'])) {
 	} else {
 		$alert = "<h3> Failed to upload!</h3>";
 	}
+	$product_name = "";
+	$qty = "";
+	$price = "";
 }
 
 ?>
@@ -129,7 +158,7 @@ if (isset($_POST['upload'])) {
 		<div class="blank"></div>
 		<div class="logo">
 			<div class="box-logo">
-				<img src="../image/photo_2022-02-04_20-39-23.jpg">
+				<img src="../image/headerlogo.jpg">
 			</div>
 		</div>
 		<div class="cart"></div>
@@ -139,26 +168,31 @@ if (isset($_POST['upload'])) {
 		<div class="content-insert">
 			<form method="POST" action="" enctype="multipart/form-data">
 
-				<?php
-				$sql = "SELECT categorie_id, categorie_name  FROM categories";
-				$result = $connection->query($sql);
-				
-				if ($result->num_rows > 0) {
-				?>
-					<label for="exampleFormControlSelect1">Products Categories</label>
-					<select class="form-control" id="exampleFormControlSelect1" name="categorie" >
-						<option value="<?php echo $categorie_id ?>"><?php echo $categorie_name ?></option>
-						<?php while ($row = $result->fetch_assoc()) { ?>
-							<option value="<?php echo $row['categorie_id'] ?>"> <?php echo $row['categorie_name'] ?></option>
-						<?php } ?>
-						
-					</select>
-				<?php
-				}
-				?>
+
+				<div class="form-group">
+					<?php
+					$sql = "SELECT categorie_id, categorie_name  FROM categories";
+					$result = $connection->query($sql);
+					if ($result->num_rows > 0) {
+					?>
+						<label for="exampleFormControlSelect1">Products Categories</label>
+						<select class="form-control" id="exampleFormControlSelect1" name="categorie">
+
+							<?php while ($row = $result->fetch_assoc()) {
+								if ($row['categorie_id'] == $categorie_id) { ?>
+									<option selected value="<?php echo $row['categorie_id'] ?>"> <?php echo $row['categorie_name'] ?></option>
+								<?php } else { ?>
+									<option value="<?php echo $row['categorie_id'] ?>"> <?php echo $row['categorie_name'] ?></option>
+							<?php }
+							} ?>
+
+						</select>
+					<?php } ?>
+				</div>
 				<br>
 				<div class="form-group">
-					<input class="form-control" type="text" name="product_name" value="<?php echo $product_name ?>" placeholder="Product Name" required />
+					
+					<input id="pdn" class="form-control" type="text" name="product_name" value="<?php echo $product_name ?>" placeholder="Product Name" required />
 				</div>
 				<br>
 				<div class="form-group">
@@ -193,9 +227,6 @@ if (isset($_POST['upload'])) {
 		</div>
 		<div class="content-read">
 			<?php
-			if (mysqli_connect_errno() > 0) {
-				die(mysqli_connect_error());
-			}
 			$sql = "SELECT product_id, product_name, qty, price,image_front, image_back FROM products order by product_id asc";
 			$result = mysqli_query($connection, $sql);
 			if (mysqli_errno($connection) > 0) {
@@ -218,7 +249,7 @@ if (isset($_POST['upload'])) {
 						<tr>
 							<th><?php echo $row["product_name"]; ?></th>
 							<th><?php echo $row["qty"]; ?></th>
-							<th><?php echo $row["price"]; ?></th>
+							<th><span>$</span><?php echo $row["price"]; ?></th>
 							<th>
 								<div class="image"><img src="../image/<?php echo $row["image_front"]; ?>" alt=""></div>
 							</th>

@@ -8,6 +8,24 @@ window.addEventListener("scroll", function () {
 
 });
 
+//onchange amount number
+var cookieValue = document.getElementById("price").value;
+
+jQuery(function ($) {
+
+  $('#num').on('input', function () {
+    $('#amountt').text(($('#num').val()) * (cookieValue) +"$");
+    $('input[name="amount"]').val(($('#num').val()) * (cookieValue));
+    $('input[name="qty"]').val($(this).val());
+  });
+});
+
+// $('input[name="name"]').change(function() {
+//   $('input[name="firstname"]').val($(this).val());
+// });
+
+
+
 
 
 

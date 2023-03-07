@@ -55,12 +55,12 @@
 
                     <div class="product">
                         <div class="box">
-                            <a href="#"><img src="..\image\<?php echo $row['image_front'] ?>" alt=""></a>
+                            <a href="../page/subindex.php?product_id=<?php echo $row['product_id']?>"><img src="..\image\<?php echo $row['image_front'] ?>" alt=""></a>
                             <div class="box-detail">
                                 <a href="#">Quick View</a>
                             </div>
                         </div>
-                        <div class="product-name"><a href="#"><?php echo $row['product_name'] ?></a></div>
+                        <div class="product-name"><a href="../page/subindex.php?product_id=<?php echo $row['product_id']?>"><?php echo $row['product_name'] ?></a></div>
                         <div class="product-price"><?php echo $row['price'] ?><span> $ </span></div>
                     </div>
 
@@ -77,7 +77,7 @@
     <div class="footer">
         <a href="/">© 2023 cheachanborey</a>
     </div>
-    <script src="..\js\script.js"></script>
+    <script src="../js/script.js"></script>
 </body>
 
 </html>
