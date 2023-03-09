@@ -55,7 +55,7 @@
 
                     <div class="product">
                         <div class="box">
-                            <a href="../page/subindex.php?product_id=<?php echo $row['product_id']?>"><img src="..\image\<?php echo $row['image_front'] ?>" alt=""></a>
+                            <a href="../page/payment/subindex.php?product_id=<?php echo $row['product_id']?>"><img src="..\image\<?php echo $row['image_front'] ?>" alt=""></a>
                             <div class="box-detail">
                                 <a href="#">Quick View</a>
                             </div>

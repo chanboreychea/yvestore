@@ -14,8 +14,8 @@ var cookieValue = document.getElementById("price").value;
 jQuery(function ($) {
 
   $('#num').on('input', function () {
-    $('#amountt').text(($('#num').val()) * (cookieValue) +"$");
-    $('input[name="amount"]').val(($('#num').val()) * (cookieValue));
+    $('#amountt').text((($('#num').val()) * (cookieValue)).toFixed(2) +"$");
+    $('input[name="amount"]').val($('#num').val() * (cookieValue));
     $('input[name="qty"]').val($(this).val());
   });
 });
